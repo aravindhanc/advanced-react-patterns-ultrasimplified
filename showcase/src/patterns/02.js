@@ -10,10 +10,10 @@ const initialState = {
   countTotal:267,
   isClicked:false
 }
-const useClapAnimation = (clapEl,
+const useClapAnimation = ({clapEl,
                           countEl,
-                          clapTotalEl) =>{
-  const [animationTimeLine,setAnimationTimeLine] = useState(() =>initialState);
+                          clapTotalEl}) =>{
+  const [animationTimeline,setAnimationTimeline] = useState(() => new mojs.Timeline());
   useLayoutEffect( () => {
     if(!clapEl || !countEl || !clapTotalEl) {
       return
@@ -80,10 +80,10 @@ const useClapAnimation = (clapEl,
     } else {
       clapEl.style.transform ='scale(1,1)';
     }
-    const newAnimationTimeline = animationTimeLine.add([scaleButton,countTotalAnimation,countAnimation,triangleBurst,circleBurst]);
-    setAnimationTimeLine({animationTimeLine})
+    const newanimationTimeline = animationTimeline.add([scaleButton,countTotalAnimation,countAnimation,triangleBurst,circleBurst]);
+    setAnimationTimeline(newanimationTimeline)
   },[clapEl,countEl,clapTotalEl]);
-  return animationTimeLine;
+  return animationTimeline;
 }
 const MediumClap =() => {
   const MAXIMUM_USER_CLAP = 12;
@@ -97,14 +97,14 @@ const MediumClap =() => {
         [node.dataset.refkey]:node
       }))
   },[])
-  const animationTimeLine  = useClapAnimation({
+  const animationTimeline  = useClapAnimation({
     clapEl:clapRef,
     countEl:clapCountRef,
     clapTotalEl:clapTotalRef
   });
   const handleClapClick = () => {
     //set state
-    animationTimeLine.replay();
+    animationTimeline.replay();
     setClapState(prevState => ({
       isClicked:true,
       count: Math.min(prevState.count+1,MAXIMUM_USER_CLAP),
